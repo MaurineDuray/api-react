@@ -26,6 +26,8 @@ const CustomersPageWithPagination  = (props) => {
             .catch(error => console.log(error.response))
 
     },[currentPage])
+    // je relance le fetch à chaque changement de page
+    
     return ( 
         <>
             <h1>Liste des clients</h1>
