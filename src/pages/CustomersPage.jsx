@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import customersAPI from '../services/customersAPI';
 import Pagination from '../components/Pagination';
+import { Link } from 'react-router-dom';
 
 const CustomersPage = (props) => {
 
@@ -98,6 +99,7 @@ const CustomersPage = (props) => {
                             <td className='text-center'>{customer.totalAmount.toLocaleString()}€</td>
                             <td className='text-center'>{customer.unpaidAmount.toLocaleString()}€</td>
                             <td>
+                                <Link className="btn btn-sm btn-warning m-1" to={`/customers/${customer.id}`}>Editer</Link>
                                 <button disabled={customer.invoices.length > 0} className="btn btn-sm btn-danger" onClick={() => handleDelete(customer.id)}>Supprimer</button>
                             </td>
                         </tr>

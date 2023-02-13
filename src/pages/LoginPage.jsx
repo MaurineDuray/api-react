@@ -64,6 +64,7 @@ const LoginPage = (props) => {
                             value={credentials.password}
                             onChange={handleChange}
                             error={error}
+                            placeholder='Mot de passe'
                             type="password"
                         />
                         <div className="form-group my-3">
