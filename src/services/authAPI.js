@@ -5,12 +5,16 @@ function authenticate(credentials)
 {
     return Axios
             .post("http://localhost:8000/api/login_check", credentials)
+            // promesse
             .then(response => response.data.token)
+            // réponse
             .then(token => {
                 window.localStorage.setItem('authToken', token)
                 // ajouter à axios pour chaque req, le bearer token avec notre token
                 Axios.defaults.headers["Authorization"]="Bearer " + token
+                // par défault je défini le token dans le header
                 return true
+                // {}donc return obligatoire
             })
 }
 
@@ -31,11 +35,11 @@ function setup()
         if((jwtData.exp * 1000) > new Date().getTime())
         {
             Axios.defaults.headers["Authorization"]="Bearer " + token
+            // s'assurer que si le token est valide je remet le token dans le header
         }
     }
 }
 
-// vérifier si je suis authentifié pour gérer l'affichage différencié
 function isAuthenticated()
 {
     const token = window.localStorage.getItem('authToken')
@@ -45,16 +49,16 @@ function isAuthenticated()
         // millisecondes vs secondes
         if((jwtData.exp * 1000) > new Date().getTime())
         {
-            return false //ok
+            return true // ok
         }
-        return false //token expiré
+        return false // token expiré
     }
-    return false //pas de token  
+    return false // pas de token
 }
 
 export default {
     authenticate: authenticate,
     logout: logout,
     setup: setup,
-    isAuthenticated: isAuthenticated
+    isAuthenticated : isAuthenticated
 }

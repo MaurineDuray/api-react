@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import authAPI from '../services/authAPI';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext';
+import Field from '../components/forms/Field';
 
 const LoginPage = (props) => {
 
     const navigate = useNavigate()
+    const {setIsAuthenticated} = useContext(AuthContext)
 
     const [credentials, setCredentials] = useState({
         username: "",
@@ -33,7 +36,7 @@ const LoginPage = (props) => {
         try{
             await authAPI.authenticate(credentials)
             setError("")
-            props.onLogin(true)
+            setIsAuthenticated(true)
             navigate('/customers', {replace: true})
         }catch(error)
         {
@@ -47,33 +50,22 @@ const LoginPage = (props) => {
                 <div className="col-4 offset-4">
                     <h1>Connexion</h1>
                     <form onSubmit={handleSubmit}>
-                        <div className="form-group my-3">
-                            <label htmlFor="username">Adresse E-mail</label>
-                            <input 
-                                type="text"
-                                value={credentials.username}
-                                onChange={handleChange}
-                                placeholder="Adresse E-mail de connexion"
-                                name="username"
-                                id="username"
-                                className={"form-control" + (error && " is-invalid")}
-                            />
-                            { error && (
-                                <p className="invalid-feedback">{error}</p>
-                            )}
-                        </div>
-                        <div className='form-group my-3'>
-                            <label htmlFor="password">Mot de passe</label>
-                            <input
-                                type="password"
-                                value={credentials.password}
-                                onChange={handleChange}
-                                placeholder="Mot de passe"
-                                id="password"
-                                name="password"
-                                className='form-control' 
-                             />
-                        </div>
+                        <Field
+                            label="Adressse mail"
+                            name="username"
+                            value={credentials.username}
+                            onChange={handleChange}
+                            placeholder='Adresse e-mail de connexion'
+                            erroe={error}
+                        />
+                        <Field
+                            label="Mot de passe"
+                            name="password"
+                            value={credentials.password}
+                            onChange={handleChange}
+                            error={error}
+                            type="password"
+                        />
                         <div className="form-group my-3">
                             <button className='btn btn-success'>Connexion</button>
                         </div>

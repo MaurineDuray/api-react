@@ -8,29 +8,43 @@ import InvoicesPage from "./pages/InvoicesPage";
 import LoginPage from "./pages/LoginPage";
 import authAPI from "./services/authAPI";
 import PrivateRoute from './components/PrivateRoute';
+import AuthContext from './contexts/AuthContext';
+import CustomerPage from './pages/CustomerPage';
 
 authAPI.setup()
+// verification de la validité du token (cas de rechargement)
 
 const App = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(authAPI.isAuthenticated())
 
+  // on donne les infos à la forme de notre contexte
+  const contextValue = {
+    isAuthenticated: isAuthenticated,
+    setIsAuthenticated: setIsAuthenticated
+  }
+
   return ( 
+    <AuthContext.Provider value={contextValue}>
+      {/* rempli le AuthContext */}
     <Router>
-      <Navbar isAuthenticated={isAuthenticated} onLogout={setIsAuthenticated}/>
+      <Navbar />
       <main className="container pt-5">
         <Routes>
-          <Route path="/login" element={<LoginPage onLogin={setIsAuthenticated}/>} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/customers/:id" element={
+            <PrivateRoute>
+              <CustomerPage/>
+            </PrivateRoute>
+          }/>
           <Route path="/customers" element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute >
               <CustomersPage />
             </PrivateRoute>
           } />
-          <Route path="/customerspage" element={
-              <CustomersPageWithPagination />
-          } />
+          <Route path="/customerspage" element={<CustomersPageWithPagination />} />
           <Route path="/invoices" element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
+            <PrivateRoute >
               <InvoicesPage />
             </PrivateRoute>
           }/>
@@ -38,6 +52,7 @@ const App = () => {
         </Routes>
       </main>
     </Router>
+    </AuthContext.Provider>
    );
 }
  
