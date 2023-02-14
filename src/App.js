@@ -10,6 +10,10 @@ import authAPI from "./services/authAPI";
 import PrivateRoute from './components/PrivateRoute';
 import AuthContext from './contexts/AuthContext';
 import CustomerPage from './pages/CustomerPage';
+import InvoicePage from './pages/InvoicePage';
+import RegisterPage from './pages/RegisterPage';
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css'
 
 authAPI.setup()
 // verification de la validité du token (cas de rechargement)
@@ -32,6 +36,7 @@ const App = () => {
       <main className="container pt-5">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />}/>
           <Route path="/customers/:id" element={
             <PrivateRoute>
               <CustomerPage/>
@@ -41,8 +46,13 @@ const App = () => {
             <PrivateRoute >
               <CustomersPage />
             </PrivateRoute>
-          } />
-          <Route path="/customerspage" element={<CustomersPageWithPagination />} />
+          }/>
+          <Route path="/customerspage" element={<CustomersPageWithPagination />}/>
+          <Route path='/invoices/:id' element={
+            <PrivateRoute>
+              <InvoicePage/>
+            </PrivateRoute>
+          }/>
           <Route path="/invoices" element={
             <PrivateRoute >
               <InvoicesPage />
@@ -52,6 +62,7 @@ const App = () => {
         </Routes>
       </main>
     </Router>
+    <ToastContainer position={toast.POSITION.BOTTOM_LEFT} />
     </AuthContext.Provider>
    );
 }

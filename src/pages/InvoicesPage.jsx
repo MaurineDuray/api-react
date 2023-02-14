@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
 import invoicesAPI from '../services/invoicesAPI';
 import moment from 'moment/moment';
+import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const STATUS_CLASSES = {
     PAID: "success",
@@ -28,7 +30,7 @@ const InvoicesPage = () => {
             setInvoices(data)
         }catch(error)
         {
-            // notif
+            toast.error("Erreur lors du chargement des factures")
             console.log(error.response)
         }
     }
@@ -56,9 +58,10 @@ const InvoicesPage = () => {
 
         try{
             await invoicesAPI.delete(id)
+            toast.warning("La facture "+id+" a bien été supprimée")
         }catch(error)
         {
-            // notif
+            toast.error("Une ereur est survenue")
             setInvoices(originalInvoices)
         }
     }
@@ -76,7 +79,11 @@ const InvoicesPage = () => {
 
     return ( 
         <>
+        <div className="d-flex justify-content-between align-items-center">
             <h1>Liste des factures</h1>
+            <Link to="/invoices/new"className='btn btn-primary mb-3'>Créer une facture</Link>
+        </div>
+           
              {/*  filtre */}
              <div className="form-group">
                 <input type="text" className='form-control' placeholder='Rechercher...' value={search} onChange={handleSearch}/>
@@ -106,7 +113,7 @@ const InvoicesPage = () => {
                                 </td>
                                 <td className="text-center">{invoice.amount.toLocaleString()}€</td>
                                 <td className="text-center">
-                                    <button className="btn btn-sm btn-warning mx-3">Editer</button>
+                                    <Link to={`/invoices/${invoice.id}`} className="btn btn-sm btn-warning mx-3">Editer</Link>
                                     <button
                                         onClick={() => handleDelete(invoice.id)} 
                                         className='btn btn-sm btn-danger mx-3'>Supprimer</button>

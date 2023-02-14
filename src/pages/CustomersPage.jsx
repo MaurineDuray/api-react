@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import customersAPI from '../services/customersAPI';
 import Pagination from '../components/Pagination';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 const CustomersPage = (props) => {
 
@@ -18,7 +19,8 @@ const CustomersPage = (props) => {
             const data = await customersAPI.findAll()
             setCustomers(data)
         }catch(error){
-            console.log(error.response)
+            toast.error("Impossible de charger les clients ")
+            // console.log(error.response)
         }
     }
 
@@ -36,8 +38,10 @@ const CustomersPage = (props) => {
         // faire le chngement dans la bdd
         try{
             await customersAPI.delete(id)
+            toast.warning("Le client "+id+" a bien été supprimé")
         }catch(error){
             setCustomers(originalCustomer)
+            toast.error("La suppression du client n'a pas fonctionné")
             // si jamais la promesse ne fonctionne pas je remet le "non-supprimé"
         }
     }
@@ -66,7 +70,11 @@ const CustomersPage = (props) => {
     const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage)
     return ( 
         <>
+        <div className="d-flex justify-content-between align-items-center">
             <h1>Liste des clients</h1>
+            <Link to="/customers/new"className='btn btn-primary mb-3'>Créer un client</Link>
+        </div>
+           
             {/* filtre */}
             <div className="form-group">
                 <input type="text" className='form-control' placeholder='rechercher...' value={search} onChange={handleSearch}/>

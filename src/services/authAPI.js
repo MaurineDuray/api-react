@@ -1,10 +1,11 @@
 import Axios from 'axios'
 import jwtDecode from 'jwt-decode'
+import { LOGIN_API } from '../config'
 
 function authenticate(credentials)
 {
     return Axios
-            .post("http://localhost:8000/api/login_check", credentials)
+            .post(LOGIN_API, credentials)
             // promesse
             .then(response => response.data.token)
             // réponse
